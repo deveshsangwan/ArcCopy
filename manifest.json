@@ -22,7 +22,8 @@
     "clipboardWrite",
     "scripting",
     "activeTab",
-    "notifications"
+    "notifications",
+    "incognito"
   ],
   "host_permissions": [
     "<all_urls>"
