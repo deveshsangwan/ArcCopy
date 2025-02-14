@@ -4,7 +4,7 @@ A Chrome extension for quickly copying the current tab's URL using a keyboard sh
 
 ## Features
 
-- Copy current tab URL with Alt+Shift+C (Command+Shift+C on Mac)
+- Copy current tab URL with Alt+Shift+C (Command+Shift+X on Mac)
 - Works with restricted pages (chrome://, edge://, about:)
 - Shows brief notification when URL is copied
 - Supports all webpage URLs
