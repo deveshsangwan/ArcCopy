@@ -8,22 +8,31 @@ export class NotificationService {
     }
 
     public async show(message: string, isError: boolean = false): Promise<string> {
-        const shortMessage = this.truncateMessage(message);
-        const notificationId = Date.now().toString();
+        try {
+            const shortMessage = this.truncateMessage(message);
+            const notificationId = Date.now().toString();
 
-        await chrome.notifications.create(notificationId, {
-            type: 'basic',
-            iconUrl: isError ? 'error.png' : 'success.png',
-            title: isError ? 'Error!' : 'URL Copied!',
-            message: shortMessage,
-            priority: 0,
-            silent: true
-        });
+            chrome.notifications.create(notificationId, {
+                type: 'basic',
+                iconUrl: isError ? 'error.png' : 'success.png',
+                title: isError ? 'Error!' : 'URL Copied!',
+                message: shortMessage,
+                priority: 0,
+                silent: true
+            });
 
-        setTimeout(async () => {
-            await chrome.notifications.clear(notificationId);
-        }, CONFIG.NOTIFICATION_DURATION);
+            setTimeout(async () => {
+                try {
+                    chrome.notifications.clear(notificationId);
+                } catch (err) {
+                    console.error('Failed to clear notification:', err);
+                }
+            }, CONFIG.NOTIFICATION_DURATION);
 
-        return notificationId;
+            return notificationId;
+        } catch (err) {
+            console.error('Notification error:', err);
+            return Date.now().toString();
+        }
     }
 }

@@ -11,14 +11,14 @@
     "copy-url": {
       "suggested_key": {
         "default": "Alt+Shift+C",
-        "mac": "Command+Shift+C"
+        "mac": "Command+Shift+X"
       },
       "description": "Copy current tab URL"
     }
   },
   "permissions": [
     "activeTab",
-    "scripting", 
+    "scripting",
     "notifications",
     "clipboardWrite"
   ],
