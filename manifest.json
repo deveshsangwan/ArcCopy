@@ -1,29 +1,26 @@
 {
   "name": "QuickClip URL",
-  "version": "1.0",
+  "version": "1.0.1",
   "manifest_version": 3,
-  "description": "Copy the current tab's URL with Command+Shift+C",
+  "description": "Quickly copy the current tab's URL with a keyboard shortcut",
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "commands": {
     "copy-url": {
       "suggested_key": {
         "default": "Alt+Shift+C",
-        "mac": "Alt+Shift+C"
+        "mac": "Command+Shift+C"
       },
       "description": "Copy current tab URL"
     }
   },
   "permissions": [
-    "tabs",
     "activeTab",
-    "clipboard",
-    "clipboardWrite",
-    "scripting",
-    "activeTab",
+    "scripting", 
     "notifications",
-    "incognito"
+    "clipboardWrite"
   ],
   "host_permissions": [
     "<all_urls>"
