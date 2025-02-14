@@ -27,8 +27,5 @@
     "scripting",
     "notifications",
     "clipboardWrite"
-  ],
-  "host_permissions": [
-    "<all_urls>"
   ]
 }
