@@ -1,0 +1,34 @@
+src/background.ts
+  s_0d88c4587c611b::t_b8768a50641821 3-5,9,24,32-43,45,47-55,58-64,67-68,82
+README.md
+  s_0d88c4587c611b::t_b8768a50641821 8,44
+src/offscreen.html
+  s_0d88c4587c611b::t_b8768a50641821 1-10
+src/types/messages.ts
+  s_0d88c4587c611b::t_b8768a50641821 1-24
+manifest.json
+  s_0d88c4587c611b::t_b8768a50641821 28-29,31
+package.json
+  s_0d88c4587c611b::t_f2cef64f4bbeee 10
+  s_0d88c4587c611b::t_b8768a50641821 8-9,25
+src/offscreen.ts
+  s_0d88c4587c611b::t_b8768a50641821 1-30
+src/constants/config.ts
+  s_0d88c4587c611b::t_b8768a50641821 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "fd9d6a3609521a726deae7cf15c00aaa4eb725c8",
+  "prompts": {},
+  "sessions": {
+    "s_0d88c4587c611b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019edb86-545e-74d0-a14e-4fd68b5ecc0a",
+        "model": "gpt-5.5"
+      },
+      "human_author": "deveshsangwan <dev.sangwan2001@gmail.com>"
+    }
+  }
+}
