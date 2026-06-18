@@ -24,8 +24,8 @@
   },
   "permissions": [
     "activeTab",
-    "scripting",
     "notifications",
-    "clipboardWrite"
+    "clipboardWrite",
+    "offscreen"
   ]
 }

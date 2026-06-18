@@ -1,9 +1,12 @@
 import { NotificationService } from './services/notification';
-import { isRestrictedURL } from './utils/url-utils';
 import { CopyResult } from './types/interfaces';
+import { ClipboardCopyRequest, ClipboardCopyResponse } from './types/messages';
+
+const OFFSCREEN_DOCUMENT_PATH = 'offscreen.html';
 
 class URLCopier {
     private notificationService: NotificationService;
+    private creatingOffscreenDocument?: Promise<void>;
 
     constructor() {
         this.notificationService = new NotificationService();
@@ -18,7 +21,7 @@ class URLCopier {
                 return { success: false, message: 'No valid URL found' };
             }
 
-            await this.copyToClipboard(activeTab.url, activeTab.id);
+            await this.copyToClipboard(activeTab.url);
             return { success: true, message: activeTab.url };
         } catch (error) {
             console.error('Error in copyURL:', error);
@@ -26,32 +29,43 @@ class URLCopier {
         }
     }
 
-    private async copyToClipboard(url: string, tabId?: number): Promise<void> {
-        if (!tabId) {
-            throw new Error('Invalid tab ID');
+    private async copyToClipboard(url: string): Promise<void> {
+        await this.setupOffscreenDocument();
+
+        const message: ClipboardCopyRequest = {
+            target: 'offscreen',
+            type: 'copy-to-clipboard',
+            text: url
+        };
+        const response = await chrome.runtime.sendMessage<ClipboardCopyRequest, ClipboardCopyResponse>(message);
+
+        if (!response?.success) {
+            throw new Error(response?.error ?? 'Failed to copy to clipboard');
+        }
+    }
+
+    private async setupOffscreenDocument(): Promise<void> {
+        const offscreenUrl = chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH);
+        const existingContexts = await chrome.runtime.getContexts({
+            contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT],
+            documentUrls: [offscreenUrl]
+        });
+
+        if (existingContexts.length > 0) {
+            return;
         }
 
-        if (isRestrictedURL(url)) {
-            throw new Error('Cannot copy restricted URLs');
-        }
-
-        try {
-            await chrome.scripting.executeScript({
-                target: { tabId },
-                func: async (text: string): Promise<void> => {
-                    try {
-                        await navigator.clipboard.writeText(text);
-                    } catch (error) {
-                        console.error('Failed to copy to clipboard:', error);
-                        throw new Error('Failed to copy to clipboard');
-                    }
-                },
-                args: [url]
+        if (!this.creatingOffscreenDocument) {
+            this.creatingOffscreenDocument = chrome.offscreen.createDocument({
+                url: OFFSCREEN_DOCUMENT_PATH,
+                reasons: [chrome.offscreen.Reason.CLIPBOARD],
+                justification: 'Copy the current tab URL to the clipboard.'
+            }).finally((): void => {
+                this.creatingOffscreenDocument = undefined;
             });
-        } catch (error) {
-            console.error('Failed to copy URL:', error);
-            throw new Error('Failed to copy to clipboard');
         }
+
+        await this.creatingOffscreenDocument;
     }
 
     public init(): void {
