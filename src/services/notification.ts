@@ -1,6 +1,7 @@
 import { CONFIG } from '../constants/config';
 
 export const NOTIFICATION_CLEANUP_ALARM_PREFIX = 'quickclip-notification-cleanup:';
+export const NOTIFICATION_CLEANUP_FALLBACK_DELAY = 30_000;
 
 const getCleanupAlarmName = (notificationId: string): string =>
     `${NOTIFICATION_CLEANUP_ALARM_PREFIX}${notificationId}`;
@@ -14,6 +15,39 @@ const getNotificationIdFromCleanupAlarm = (alarmName: string): string | undefine
     return notificationId || undefined;
 };
 
+const clearNotification = (notificationId: string): Promise<boolean> =>
+    new Promise((resolve, reject): void => {
+        try {
+            // @types/chrome still exposes the callback overload, while Chrome 116+ can also
+            // return a Promise. Supporting both keeps cleanup quiet in either environment.
+            const result = chrome.notifications.clear(notificationId, resolve) as unknown;
+
+            if (result instanceof Promise) {
+                void result.then(resolve, reject);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+
+const clearCleanupAlarm = async (notificationId: string): Promise<void> => {
+    try {
+        await chrome.alarms.clear(getCleanupAlarmName(notificationId));
+    } catch {
+        // The alarm is only a fallback, so cancellation failures are intentionally quiet.
+    }
+};
+
+const clearNotificationAndFallbackAlarm = async (notificationId: string): Promise<void> => {
+    try {
+        if (await clearNotification(notificationId)) {
+            await clearCleanupAlarm(notificationId);
+        }
+    } catch {
+        // Notification cleanup is best-effort and must not disrupt future copy commands.
+    }
+};
+
 export const clearNotificationForCleanupAlarm = (alarm: chrome.alarms.Alarm): void => {
     const notificationId = getNotificationIdFromCleanupAlarm(alarm.name);
 
@@ -21,13 +55,7 @@ export const clearNotificationForCleanupAlarm = (alarm: chrome.alarms.Alarm): vo
         return;
     }
 
-    try {
-        // Chrome's callback API returns void, while modern MV3 Chrome may return a Promise.
-        // Handle either form without allowing cleanup failures to escape the alarm listener.
-        void Promise.resolve(chrome.notifications.clear(notificationId)).catch((): void => undefined);
-    } catch {
-        // Notification cleanup is best-effort and must not disrupt future copy commands.
-    }
+    void clearNotification(notificationId).catch((): void => undefined);
 };
 
 // Register while the service worker module is evaluated so alarm delivery can wake a new worker.
@@ -54,7 +82,8 @@ export class NotificationService {
                 silent: true
             });
 
-            await this.scheduleCleanup(notificationId);
+            this.scheduleTimerCleanup(notificationId);
+            await this.scheduleFallbackCleanup(notificationId);
 
             return notificationId;
         } catch (err) {
@@ -63,13 +92,19 @@ export class NotificationService {
         }
     }
 
-    private async scheduleCleanup(notificationId: string): Promise<void> {
+    private scheduleTimerCleanup(notificationId: string): void {
+        setTimeout((): void => {
+            void clearNotificationAndFallbackAlarm(notificationId);
+        }, CONFIG.NOTIFICATION_DURATION);
+    }
+
+    private async scheduleFallbackCleanup(notificationId: string): Promise<void> {
         try {
             await chrome.alarms.create(getCleanupAlarmName(notificationId), {
-                when: Date.now() + CONFIG.NOTIFICATION_DURATION
+                when: Date.now() + Math.max(CONFIG.NOTIFICATION_DURATION, NOTIFICATION_CLEANUP_FALLBACK_DELAY)
             });
         } catch {
-            // Alarms are best-effort; a notification still communicates the copy result without one.
+            // Timer cleanup is already scheduled; the alarm only covers a suspended worker.
         }
     }
 }
