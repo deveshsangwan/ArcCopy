@@ -8,6 +8,7 @@ A Chrome extension for quickly copying the current tab's URL using a keyboard sh
 - Works with browser-managed pages (chrome://, edge://, about:) when Chrome exposes the active tab URL
 - Shows brief notification when URL is copied
 - Supports all webpage URLs
+- Uses the `alarms` permission to clean up copy-result notifications after the MV3 service worker has been suspended or restarted (Chrome may defer alarm delivery under its scheduling policy)
 
 ## Installation
 
