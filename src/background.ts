@@ -1,4 +1,6 @@
+import { assertClipboardCopySucceeded } from './services/clipboard';
 import { NotificationService } from './services/notification';
+import { getURLCopyResult } from './services/url';
 import { CopyResult } from './types/interfaces';
 import { ClipboardCopyRequest, ClipboardCopyResponse } from './types/messages';
 
@@ -16,13 +18,14 @@ class URLCopier {
         try {
             const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
             const activeTab = tabs[0];
+            const result = getURLCopyResult(activeTab?.url);
 
-            if (!activeTab?.url) {
-                return { success: false, message: 'No valid URL found' };
+            if (!result.success) {
+                return result;
             }
 
-            await this.copyToClipboard(activeTab.url);
-            return { success: true, message: activeTab.url };
+            await this.copyToClipboard(result.message);
+            return result;
         } catch (error) {
             console.error('Error in copyURL:', error);
             return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
@@ -39,9 +42,7 @@ class URLCopier {
         };
         const response = await chrome.runtime.sendMessage<ClipboardCopyRequest, ClipboardCopyResponse>(message);
 
-        if (!response?.success) {
-            throw new Error(response?.error ?? 'Failed to copy to clipboard');
-        }
+        assertClipboardCopySucceeded(response);
     }
 
     private async setupOffscreenDocument(): Promise<void> {
