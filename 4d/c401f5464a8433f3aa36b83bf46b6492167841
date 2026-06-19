@@ -1,0 +1,21 @@
+manifest.json
+  s_00f6ae536beed7::t_e3265b2d225d44 5
+package.json
+  s_00f6ae536beed7::t_e3265b2d225d44 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "4dc401f5464a8433f3aa36b83bf46b6492167841",
+  "prompts": {},
+  "sessions": {
+    "s_00f6ae536beed7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ee0b8-33c8-7ad1-a354-336b4637d3d3",
+        "model": "gpt-5.5"
+      },
+      "human_author": "deveshsangwan <dev.sangwan2001@gmail.com>"
+    }
+  }
+}
