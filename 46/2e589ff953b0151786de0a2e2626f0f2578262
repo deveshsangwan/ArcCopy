@@ -1,0 +1,26 @@
+manifest.json
+  s_00f6ae536beed7::t_edab4d1ddbb008 28
+tests/notification.test.ts
+  s_00f6ae536beed7::t_c23341efc11c2b 41-48,61-72,76,85,95
+  s_00f6ae536beed7::t_edab4d1ddbb008 1-40,49-60,73-75,77-84,86-94,96-104
+README.md
+  s_00f6ae536beed7::t_edab4d1ddbb008 11
+src/services/notification.ts
+  s_00f6ae536beed7::t_edab4d1ddbb008 3-35,46,57,65-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "462e589ff953b0151786de0a2e2626f0f2578262",
+  "prompts": {},
+  "sessions": {
+    "s_00f6ae536beed7": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019ee0b8-33c8-7ad1-a354-336b4637d3d3",
+        "model": "gpt-5.5"
+      },
+      "human_author": "deveshsangwan <dev.sangwan2001@gmail.com>"
+    }
+  }
+}
