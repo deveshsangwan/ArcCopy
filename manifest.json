@@ -2,6 +2,7 @@
   "name": "QuickClip URL",
   "version": "1.0.1",
   "manifest_version": 3,
+  "minimum_chrome_version": "116",
   "description": "Quickly copy the current tab's URL with a keyboard shortcut",
   "background": {
     "service_worker": "background.js",
