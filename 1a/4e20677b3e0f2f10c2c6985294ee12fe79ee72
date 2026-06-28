@@ -1,0 +1,19 @@
+src/background.ts
+  s_dba752e1ce3a90::t_0a886b88be8d37 49-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "1a4e20677b3e0f2f10c2c6985294ee12fe79ee72",
+  "prompts": {},
+  "sessions": {
+    "s_dba752e1ce3a90": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "370bf7b3-4270-4099-bcbb-1f0e45223d04",
+        "model": "composer-2.5"
+      },
+      "human_author": "deveshsangwan <dev.sangwan2001@gmail.com>"
+    }
+  }
+}
