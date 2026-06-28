@@ -1,0 +1,42 @@
+src/utils/url-utils.ts
+  s_05dffa6f402c20::t_2060d7f388904a 1-5
+src/offscreen.ts
+  s_05dffa6f402c20::t_aab9c1e3d1a9eb 6-10,14-18
+  s_05dffa6f402c20::t_f39e843c4dda84 3-5
+  s_05dffa6f402c20::t_d5e886a995d4c1 35
+manifest.json
+  s_05dffa6f402c20::t_c3567e453dbdf6 30
+  h_9c147e6399b95b 3
+src/offscreen.html
+  s_05dffa6f402c20::t_f0dee586a3a4af 8
+src/constants/config.ts
+  s_05dffa6f402c20::t_bf35813c6b37bc 3-4
+src/background.ts
+  s_05dffa6f402c20::t_81542eef70eb5b 33-36,39-43
+  s_05dffa6f402c20::t_a59e560a5d468d 54
+  s_05dffa6f402c20::t_a6e18afc522a32 4,25,37-38,48-53,55-69
+  s_05dffa6f402c20::t_a7a313c6388089 44-47
+package.json
+  h_9c147e6399b95b 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "9c61808b70033ce0b863fc7eff1ef7cc9bd7bbb5",
+  "prompts": {},
+  "humans": {
+    "h_9c147e6399b95b": {
+      "author": "deveshsangwan <dev.sangwan2001@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_05dffa6f402c20": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a447012b-8eea-4591-8a75-b95ea971bf64",
+        "model": "composer-2.5"
+      },
+      "human_author": "deveshsangwan <dev.sangwan2001@gmail.com>"
+    }
+  }
+}
