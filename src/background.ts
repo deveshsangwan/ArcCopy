@@ -46,7 +46,8 @@ class URLCopier {
         }
 
         if (!tabId) {
-            throw new Error('Invalid tab ID');
+            await this.copyViaOffscreenDocument(url);
+            return;
         }
 
         try {
