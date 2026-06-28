@@ -1,12 +1,14 @@
+import { ClipboardService } from './services/clipboard';
 import { NotificationService } from './services/notification';
-import { isRestrictedURL } from './utils/url-utils';
 import { CopyResult } from './types/interfaces';
 
 class URLCopier {
     private notificationService: NotificationService;
+    private clipboardService: ClipboardService;
 
     constructor() {
         this.notificationService = new NotificationService();
+        this.clipboardService = new ClipboardService();
     }
 
     private async copyURL(): Promise<CopyResult> {
@@ -18,39 +20,11 @@ class URLCopier {
                 return { success: false, message: 'No valid URL found' };
             }
 
-            await this.copyToClipboard(activeTab.url, activeTab.id);
+            await this.clipboardService.copy(activeTab.url, activeTab.id);
             return { success: true, message: activeTab.url };
         } catch (error) {
             console.error('Error in copyURL:', error);
             return { success: false, message: error instanceof Error ? error.message : 'Unknown error' };
-        }
-    }
-
-    private async copyToClipboard(url: string, tabId?: number): Promise<void> {
-        if (!tabId) {
-            throw new Error('Invalid tab ID');
-        }
-
-        if (isRestrictedURL(url)) {
-            throw new Error('Cannot copy restricted URLs');
-        }
-
-        try {
-            await chrome.scripting.executeScript({
-                target: { tabId },
-                func: async (text: string): Promise<void> => {
-                    try {
-                        await navigator.clipboard.writeText(text);
-                    } catch (error) {
-                        console.error('Failed to copy to clipboard:', error);
-                        throw new Error('Failed to copy to clipboard');
-                    }
-                },
-                args: [url]
-            });
-        } catch (error) {
-            console.error('Failed to copy URL:', error);
-            throw new Error('Failed to copy to clipboard');
         }
     }
 

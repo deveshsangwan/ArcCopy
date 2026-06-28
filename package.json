@@ -1,13 +1,13 @@
 {
   "name": "arccopy",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copy-manifest": "mkdirp dist && cp manifest.json dist/ && cp assets/*.png dist/",
-    "build": "esbuild src/background.ts --bundle --outdir=dist --platform=browser --format=esm && pnpm run copy-manifest",
-    "lint": "eslint src/*.ts"
+    "copy-manifest": "mkdirp dist && cp manifest.json dist/ && cp src/offscreen.html dist/ && cp assets/*.png dist/",
+    "build": "esbuild src/background.ts src/offscreen.ts --bundle --outdir=dist --platform=browser --format=esm && pnpm run copy-manifest",
+    "lint": "eslint src/**/*.ts"
   },
   "keywords": [],
   "author": "",
