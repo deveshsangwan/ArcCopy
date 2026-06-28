@@ -1,0 +1,23 @@
+src/background.ts
+  s_2b0320e6b6f0f1::t_dc0bf90225bdf1 1,7,11,23
+src/services/clipboard.ts
+  s_2b0320e6b6f0f1::t_ac67479e0a8939 1-87
+src/types/messages.ts
+  s_2b0320e6b6f0f1::t_48c8f236e4b50f 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "568311e0e2bd30f5596a1755af45c3aa5d3de835",
+  "prompts": {},
+  "sessions": {
+    "s_2b0320e6b6f0f1": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "48ddf867-f3f4-4227-be3c-e729319bca8a",
+        "model": "composer-2.5"
+      },
+      "human_author": "deveshsangwan <dev.sangwan2001@gmail.com>"
+    }
+  }
+}
