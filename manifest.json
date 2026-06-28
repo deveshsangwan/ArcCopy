@@ -1,6 +1,6 @@
 {
   "name": "QuickClip URL",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "manifest_version": 3,
   "minimum_chrome_version": "116",
   "description": "Quickly copy the current tab's URL with a keyboard shortcut",
@@ -27,6 +27,7 @@
     "activeTab",
     "notifications",
     "clipboardWrite",
+    "scripting",
     "offscreen"
   ]
 }

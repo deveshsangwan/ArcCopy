@@ -1,6 +1,7 @@
 import { NotificationService } from './services/notification';
 import { CopyResult } from './types/interfaces';
 import { ClipboardCopyRequest, ClipboardCopyResponse } from './types/messages';
+import { isRestrictedURL } from './utils/url-utils';
 
 const OFFSCREEN_DOCUMENT_PATH = 'offscreen.html';
 
@@ -21,7 +22,7 @@ class URLCopier {
                 return { success: false, message: 'No valid URL found' };
             }
 
-            await this.copyToClipboard(activeTab.url);
+            await this.copyToClipboard(activeTab.url, activeTab.id);
             return { success: true, message: activeTab.url };
         } catch (error) {
             console.error('Error in copyURL:', error);
@@ -29,7 +30,43 @@ class URLCopier {
         }
     }
 
-    private async copyToClipboard(url: string): Promise<void> {
+    private canUseScripting(): boolean {
+        return typeof chrome.scripting?.executeScript === 'function';
+    }
+
+    private async copyToClipboard(url: string, tabId?: number): Promise<void> {
+        if (isRestrictedURL(url)) {
+            await this.copyViaOffscreenDocument(url);
+            return;
+        }
+
+        if (!this.canUseScripting()) {
+            await this.copyViaOffscreenDocument(url);
+            return;
+        }
+
+        if (!tabId) {
+            throw new Error('Invalid tab ID');
+        }
+
+        try {
+            await this.copyViaActiveTab(tabId, url);
+        } catch {
+            await this.copyViaOffscreenDocument(url);
+        }
+    }
+
+    private async copyViaActiveTab(tabId: number, url: string): Promise<void> {
+        await chrome.scripting.executeScript({
+            target: { tabId },
+            func: async (text: string): Promise<void> => {
+                await navigator.clipboard.writeText(text);
+            },
+            args: [url]
+        });
+    }
+
+    private async copyViaOffscreenDocument(url: string): Promise<void> {
         await this.setupOffscreenDocument();
 
         const message: ClipboardCopyRequest = {
