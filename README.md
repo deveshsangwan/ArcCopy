@@ -28,7 +28,7 @@ A Chrome extension for quickly copying the current tab's URL using a keyboard sh
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v18.18 or higher)
 - pnpm package manager
 
 ### Setup
