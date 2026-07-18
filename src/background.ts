@@ -20,7 +20,18 @@ class URLCopier {
                 return { success: false, message: 'No valid URL found' };
             }
 
-            await this.clipboardService.copy(activeTab.url, activeTab.id);
+            const successNotification = this.notificationService.show(activeTab.url, false);
+            const copy = this.clipboardService.copy(activeTab.url, activeTab.id);
+            const [notificationResult, copyResult] = await Promise.allSettled([successNotification, copy]);
+
+            if (copyResult.status === 'rejected') {
+                throw copyResult.reason;
+            }
+
+            if (notificationResult.status === 'rejected') {
+                throw notificationResult.reason;
+            }
+
             return { success: true, message: activeTab.url };
         } catch (error) {
             console.error('Error in copyURL:', error);
@@ -32,7 +43,10 @@ class URLCopier {
         chrome.commands.onCommand.addListener(async (command: string): Promise<void> => {
             if (command === 'copy-url') {
                 const result = await this.copyURL();
-                await this.notificationService.show(result.message, !result.success);
+
+                if (!result.success) {
+                    await this.notificationService.show(result.message, true);
+                }
             }
         });
     }
